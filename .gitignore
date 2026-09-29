@@ -1,0 +1,21 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Live trading state - never commit these
+risk_state.json
+risk_state.json.corrupt
+*.tmp
+trading_engine.log*
+
+# Single-instance engine lock
+sldpax.lock
+
+# Test output capture
+test_out.txt
+
+# Backtest artefacts - regenerate with backtest\fetch_data.py
+data/
+backtest/results/
