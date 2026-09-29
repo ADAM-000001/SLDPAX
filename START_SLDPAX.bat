@@ -19,7 +19,7 @@ if "%ERRORLEVEL%"=="0" (
     if exist "!MT5_EXE!" (
         echo [LAUNCH] Starting MetaTrader 5...
         start "" "!MT5_EXE!"
-        timeout /t 5 >nul
+        timeout /t 5 >nul 2>&1 || ping -n 6 127.0.0.1 >nul
     ) else (
         echo [WARNING] terminal64.exe not found in a standard location.
         echo          Ensure MetaTrader 5 is running and logged in.
@@ -52,9 +52,9 @@ echo        engine from its minimized console (Ctrl+C) or Task Manager.
 echo.
 
 echo [LAUNCH] Starting engine in a minimized background console...
-start "SLDPAX Engine - Ctrl+C to stop" /MIN "!PY!" main.py
+start "SLDPAX Engine - Ctrl+C to stop" /MIN !PY! main.py
 echo [WAIT] Giving the engine a few seconds to arm...
-timeout /t 5 >nul
+timeout /t 5 >nul 2>&1 || ping -n 6 127.0.0.1 >nul
 
 echo [OPEN] Launching the browser dashboard...
 start "" "http://127.0.0.1:8080/"

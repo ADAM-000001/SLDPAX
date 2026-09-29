@@ -517,6 +517,7 @@ PAGE = """<!doctype html>
   .ev-ERR .tag { background: var(--bad-bg); color: var(--bad); border: 1px solid rgba(244, 63, 94, 0.25); }
   .ev-INFO .tag { background: rgba(255, 255, 255, 0.05); color: var(--txt-dim); }
   .events .msg { color: var(--txt); word-break: break-word; font-family: var(--font-mono); font-size: 11px; }
+  .events li.empty { justify-content: center; color: var(--txt-faint); font-style: italic; border-style: dashed; }
 
   /* ---------- Footer ---------- */
   .footer {
@@ -1166,11 +1167,6 @@ function sessionFor(h){
 }
 
 // ============================================================
-// Web Audio Synthesizer & Audio Alert Engine (No External Assets)
-// ============================================================
-let audioEnabled = localStorage.getItem("sldpax_audio") !== "false";
-let audioVolume = parseFloat(localStorage.getItem("sldpax_vol") || "0.7");
-// ============================================================
 // Web Audio & Spoken Voice Alert Engine (TTS + Synthesizer)
 // ============================================================
 let audioEnabled = localStorage.getItem("sldpax_audio") !== "false";
@@ -1607,7 +1603,8 @@ function spark(canvasId, points, color){
     ctx.strokeStyle = "rgba(255, 255, 255, 0.25)";
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.roundRect(bx, by - 14, tw, 18, 4);
+    if (ctx.roundRect) { ctx.roundRect(bx, by - 14, tw, 18, 4); }
+    else { ctx.rect(bx, by - 14, tw, 18); }
     ctx.fill();
     ctx.stroke();
     ctx.fillStyle = "#ffffff";
@@ -1861,7 +1858,7 @@ async function tick(){
     const r = await fetch("/api/state", {cache: "no-store"});
     if (r.ok){
       const data = await r.json();
-      reload(data);
+      try { reload(data); } catch(e) { if (window.console) console.error("reload() error:", e); }
       if(!online){ health(true); }
     } else {
       if (online) health(false);
